@@ -1,0 +1,36 @@
+Datasets 
+========
+
+This folder contains two scripts for generating Cassandra & MongoDB datasets. 
+
+I didn't push the exact data files as they are very large, but if you want to 
+reproduce the experiments using my data, send my an e-mail and I will send you back the data files. 
+
+In addition, I uploaded a data file of a MongoDB shard. 
+This is the the data link: https://drive.google.com/file/d/0Bzu8JSTIH-U0OFFsNE84U1ktcXM/view?usp=sharing
+
+
+This data represents the example given in 
+Section 3.6 of the paper, where the performance is highly reduced.  
+This data corresponds to a shard's data in four-shards configuration.
+
+To reproduce the experiment : 
+1- Stop mongod daemon. 
+2- extract the data to a folder and then make this folder as the data folder of MongoDB 
+3- start the mongod daemon again (mongod --config  /etc/mongodb.conf --port 27017 &)
+4- connect to the daemon using mongo command in the command line. 
+5- try to start the indexing process 
+   $ use xilopix
+   $ db.dump.createIndexes({randNum:1})
+
+
+and look how much time this indexation process will take. 
+You can uncover the I/O access pattern of this indexation process by 
+launching our IO_classic tool  (provide the pid of the mongod daemon). 
+
+Then, apply our solution as described in the paper, 
+and re-index the same field again and launch our IOscope_classic and get the differences 
+in terms of indexation time and the I/O access patterns.
+
+
+
