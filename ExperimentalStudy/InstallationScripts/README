@@ -40,3 +40,9 @@ You should run the following command after uploding the script on any Grid5000's
 
 ** The script reserve all nodes on lyon site, we can make it automatic by modifing the Reservation.rb
 
+
+***************************************
+***************************************
+Installing Cassandra. 
+
+You can als install Cassandra using the script install_cassandra.sh 
