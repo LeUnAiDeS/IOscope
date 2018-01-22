@@ -148,7 +148,8 @@ def print_event(cpu, data, size):
      myFiles.append(open('%s'%event.filename,'a'))
      indexes.append(event.filename)
      TempIndex = indexes.index(event.filename)
-     myFiles[TempIndex].write("filename   pagefaultOffset_word firstPageIndexInTheRegion  address latency_ms    timestamp\n")
+     #myFiles[TempIndex].write("filename   pagefaultOffset_word firstPageIndexInTheRegion  address latency_ms    timestamp\n")
+     myFiles[TempIndex].write("filename   offset firstPageIndexInTheRegion  address latency_ms    timestamp\n")
      
   Index = indexes.index(event.filename)
   myFiles[Index].write("%s  %d   %d   %d   %7.2f  %d\n"%(event.filename, event.offset,    event.offset1,     event.address,   float(event.latency_ms),    event.timestamp))
