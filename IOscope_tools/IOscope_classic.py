@@ -34,9 +34,9 @@ arguments = parser.parse_args()
 
 
 
-if not arguments.pid:
-   print("You must indicate the PID pf the target process to be traced, otherwise there are a lot of output, including the workloads on the system files")
-   exit(0)
+#if not arguments.pid:
+#   print("You must indicate the PID pf the target process to be traced, otherwise there are a lot of output, including the workloads on the system files")
+#   exit(0)
 
 # load BPF program
 mytext = """
