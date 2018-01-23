@@ -36,7 +36,6 @@ arguments = parser.parse_args()
 
 if not arguments.pid:
    print("You must indicate the PID pf the target process to be traced, otherwise there are a lot of outputs regarding the running IO processes")
-   exit(0)
 
 # load BPF program
 mytext = """
