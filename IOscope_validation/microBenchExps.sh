@@ -58,7 +58,7 @@ sleep 4
 #kill the tracing code  
 kill $(pidof python)
 echo "move the result file" 
-mv testFile.1.0 ../results/${i}_${j}
+mv testFile.1.0 ../results/${i}_${j}.csv
 #remove files
 rm ../testFile.1.0
 rm -rf * 
@@ -86,7 +86,7 @@ fio --name=../testFile  --ioengine=mmap --rw=$c -size=32M  --direct=0 --numjobs=
 sleep 3
 kill $(pidof python)
 echo "move the result file" 
-mv testFile.1.0 ../results/mmap_${c}
+mv testFile.1.0 ../results/mmap_${c}.csv
 #remove files
 rm ../testFile.1.0
 rm -rf * 
