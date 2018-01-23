@@ -32,5 +32,5 @@ IOscope$ cd IOscope_validation/datasets/
 Ioscope/IOscope_validation/datasets/$ Rscript ../script.R out psync_rw.csv // draw only psync_rw.csv data
 Ioscope/IOscope_validation/datasets/$ for i in *.csv; do Rscript ../script.R $i; done // to draw all files
 ```
-This will produce a pdf file for each dataset workload file, containing  a correspondent figure.
+This will produce a pdf file containing a correspondent figure for each dataset workload file.
 Chenck now the *datasets* folder to visualize the drawn data.
