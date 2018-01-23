@@ -1,6 +1,6 @@
 #!/bin/bash
 
-# on debian, install fio 
+# on debian, install fio, tested with fio-2.1.3
 apt-get install -y fio
 
 # variable to take the workloads types (IOengines
@@ -77,11 +77,11 @@ echo "creating file fio ..."
 fio --name="../testFile"  -size=32M 
 # execute the tracing code 
 echo "testing mmap - ${c} ..."
-python ../IOscope_tools/IOscope_mmap.py  -i $(ls -C -i ../testFile  | awk '{print $1}') &
+python ../IOscope_tools/IOscope_mmap.py  -i $(ls -C -i ../testFile.1.0  | awk '{print $1}') &
 
 sleep 5
 echo "running fio ..." 
-fio --name=../testFile  --ioengine=mmap --rw=$c -size=128M  --direct=0 --numjobs=1 --group_reporting & 
+fio --name=../testFile  --ioengine=mmap --rw=$c -size=32M  --direct=0 --numjobs=1 --group_reporting & 
 
 sleep 3
 kill $(pidof python)
