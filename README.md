@@ -34,3 +34,22 @@ Ioscope/IOscope_validation/datasets/$ for i in *.csv; do Rscript ../script.R $i;
 ```
 This will produce a pdf file containing a correspondent figure for each provided workload.
 Chenck now the *datasets* folder to visualize the drawn data.
+
+
+## Understanding the I/O flow inside the Linux Kernel
+We modified the NOOP I/O scheduler inside the Linux kernel to expose the information about the number of the 
+waiting I/O requests in order to determine the real-time flow of the I/O worklaods of the analyzed system.
+
+
+*NoopIO* folder contains the modified files of the NOOP I/O scheduler, and our eBPF tool that consumes the exposed information.
+To understand the rate of the I/O requests of any given system, you should replace the Noop I/O scheduler files in your kernel 
+by those ones: 
+```
+   elevator.h      => can be found on this path: ~kernelSource/include/linux/
+   noop-iosched.c  => can be found on this path: ~kernelSource/block/
+``` 
+Then you can start the dedicated tool to analyze the I/O flow as follows: 
+```
+ IOscope$ python NoopIO/NoopSchedTool.py  > saveData
+ ```
+ You should stop the exeuction of NoopSchedTool at the end of the SUT workload. This will produce a file containing I/O flow of the requests that were waiting in the scheduler during the exeuction. 
