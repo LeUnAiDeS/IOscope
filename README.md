@@ -3,7 +3,7 @@ This projects provides the different tools of IOscope as well as the necessary i
 
 
 
-## validating IOscope
+## Validating IOscope
 To test IOscope against all the supported workloads, you should do the following steps. 
 Clone the IOscope project and get inside it: 
 ```
