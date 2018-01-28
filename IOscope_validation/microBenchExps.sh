@@ -16,7 +16,7 @@ echo ${ArrayModes1[*]}
 ArrayAccess=(read write randread randwrite rw randrw)
 echo ${ArrayAccess[*]}
 
-#create a file of 5GByte using dd
+#create a file of 32MByte using dd
 dd if=/dev/zero of=testFile bs=1024K count=32 oflag=direct
 
 #create a folder for results and another for the tests
