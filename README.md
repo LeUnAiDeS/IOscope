@@ -21,8 +21,8 @@ This will take a while in order to produce the results for each pair of IOengine
 If no errors are raised during the execution, you should see the results of all executed workloads. Check the results 
 inside *results* in *IOscope*. Each file consists of the I/O access patterns of the correspondent workload, as the files' names indicate. 
 
-In addition, we provide an execution dataset of *IOscope* results regarding this validation. 
-You can find them under the folder datasets.
+In addition, we provide a partial dataset of *IOscope* results obtained from the validation process. 
+You can find them in the folder datasets.
 ```
 IOscope$ ls IOscope_validation/datasets/
 ```
@@ -45,8 +45,8 @@ waiting I/O requests in order to determine the real-time flow of the I/O worklao
 To understand the rate of the I/O requests of any given system, you should replace the Noop I/O scheduler files in your kernel 
 by those ones: 
 ```
-   elevator.h      => can be found on this path: ~kernelSource/include/linux/
-   noop-iosched.c  => can be found on this path: ~kernelSource/block/
+   elevator.h      => can be found in this path: ~kernelSource/include/linux/
+   noop-iosched.c  => can be found in this path: ~kernelSource/block/
 ``` 
 Then you can start the dedicated tool to analyze the I/O flow as follows: 
 ```
