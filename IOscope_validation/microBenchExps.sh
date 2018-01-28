@@ -4,8 +4,8 @@
 apt-get install -y fio
 
 # variable to take the workloads types (IOengines
-ArrayModes=(sync psync posixaio)
-# pvsync vsync pvsync2 solarisaio windowsaio guasi external   => are not native, they could be installed and added to the list
+ArrayModes=(sync psync posixaio pvsync vsync pvsync2)
+# solarisaio windowsaio guasi external   => are not native, they could be installed and added to the list
 # libaio splice sg rdma falloc  => use differnt dedicated syscalls
 echo ${ArrayModes[*]}
 
