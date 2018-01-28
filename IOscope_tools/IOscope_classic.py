@@ -14,6 +14,7 @@ import argparse
 import signal
 import re
 import ctypes as ct
+import sys
 
 examples = """examples:
     ./IOscope_classic        # trace all the I/O worklaods of all I/O processes.             
@@ -43,9 +44,11 @@ mytext = """
 #include <linux/fs.h>
 #include <linux/sched.h>
 #include <linux/dcache.h>
+#include <linux/uio.h>
 
 struct reqInfo {
     char fileHandler[DNAME_INLINE_LEN];
+    u64 fileDisc;
     u64 offset; 
     u64 readByte;
     u64 timestamp;
@@ -55,9 +58,12 @@ struct reqInfo {
 
 
 
+
 BPF_HASH(token, u32, struct reqInfo);
 BPF_HASH(token1, u32, struct reqInfo);
+BPF_HASH(token2, u32, struct reqInfo);
 BPF_PERF_OUTPUT(events); 
+BPF_PERF_OUTPUT(eventspv); 
 
 int check_starting(struct pt_regs *ctx, struct file *f, char __user *buf, size_t count, loff_t *pos) {
     u32 pid = bpf_get_current_pid_tgid() >> 32; 
@@ -136,6 +142,62 @@ int writing_end(struct pt_regs *ctx) {
     return 0; 
 }
 
+int pvstart(struct pt_regs *ctx, int fd, const struct iovec *iov, int iovcnt, off_t offset) {
+
+    u32 pid = bpf_get_current_pid_tgid() >> 32; 
+    FILTER
+    struct reqInfo requestInfo = {};
+    requestInfo.timestamp = bpf_ktime_get_ns();
+    requestInfo.type =0;
+    strcpy(requestInfo.fileHandler,"__disc");
+   // to take the fileName
+    requestInfo.fileDisc=fd;
+   // supposing equal array sizes
+   // requestInfo.readByte = iov[0].iov_len*invcnt; 
+    requestInfo.offset = offset;
+    token2.update(&pid,&requestInfo);
+
+//events.perf_submit(ctx, &requestInfo, sizeof(requestInfo));
+    return 0;
+}
+
+int pvstart1(struct pt_regs *ctx, int fd, const struct iovec *iov, int iovcnt, off_t offset) {
+
+    u32 pid = bpf_get_current_pid_tgid() >> 32; 
+    FILTER
+    struct reqInfo requestInfo = {};
+    requestInfo.timestamp = bpf_ktime_get_ns();
+    requestInfo.type =1;
+    strcpy(requestInfo.fileHandler,"__disc");
+   // to take the fileName
+    requestInfo.fileDisc=fd;
+   // supposing equal array sizes
+   // requestInfo.readByte = iov[0].iov_len*invcnt; 
+    requestInfo.offset = offset;
+    token2.update(&pid,&requestInfo);
+
+//events.perf_submit(ctx, &requestInfo, sizeof(requestInfo));
+    return 0;
+}
+
+int pvend(struct pt_regs *ctx) {
+    u32 pid = bpf_get_current_pid_tgid() >> 32;
+    FILTER
+    u64 ts = bpf_ktime_get_ns();
+    struct reqInfo  *ref;
+    ref = token2.lookup(&pid);
+    if(ref == 0) {
+          // Oups, we missed this trace
+       return 0;
+     }
+    int ret = PT_REGS_RC(ctx);
+    ref->latency_ms = (ts-ref->timestamp) /1000000;  // from ns to ms
+    //prepare data to be reported
+     struct reqInfo data = {.fileDisc=ref->fileDisc, .timestamp = ts, .readByte =ret, .offset = ref->offset, .latency_ms= ref->latency_ms, .type = ref->type};
+    token2.delete(&pid);
+    eventspv.perf_submit(ctx, &data, sizeof(data));
+    return 0; 
+}
 """
 # attaching our tracing code to the target functions
  
@@ -150,16 +212,30 @@ b = BPF(text=mytext)
 if arguments.workload==0:
   b.attach_kprobe(event="vfs_read", fn_name="check_starting")
   b.attach_kretprobe(event="vfs_read", fn_name="check_end")
+  b.attach_kprobe(event="sys_preadv", fn_name="pvstart")
+  b.attach_kretprobe(event="sys_preadv", fn_name="pvend")
+  b.attach_kprobe(event="sys_preadv2", fn_name="pvstart")
+  b.attach_kretprobe(event="sys_preadv2", fn_name="pvend")
 elif arguments.workload==1: 
   b.attach_kprobe(event="vfs_write", fn_name="writing_start")
   b.attach_kretprobe(event="vfs_write", fn_name="writing_end")
+  b.attach_kprobe(event="sys_pwritev", fn_name="pvstart1")
+  b.attach_kretprobe(event="sys_pwritev", fn_name="pvend")
+  b.attach_kprobe(event="sys_pwritev2", fn_name="pvstart1")
+  b.attach_kretprobe(event="sys_pwritev2", fn_name="pvend")
 else: 
   b.attach_kprobe(event="vfs_read", fn_name="check_starting")
   b.attach_kretprobe(event="vfs_read", fn_name="check_end")
   b.attach_kprobe(event="vfs_write", fn_name="writing_start")
   b.attach_kretprobe(event="vfs_write", fn_name="writing_end")
-
-
+  b.attach_kprobe(event="sys_preadv", fn_name="pvstart")
+  b.attach_kretprobe(event="sys_preadv", fn_name="pvend")
+  b.attach_kprobe(event="sys_pwritev", fn_name="pvstart1")
+  b.attach_kretprobe(event="sys_pwritev", fn_name="pvend")
+  b.attach_kprobe(event="sys_preadv2", fn_name="pvstart")
+  b.attach_kretprobe(event="sys_preadv2", fn_name="pvend")
+  b.attach_kprobe(event="sys_pwritev2", fn_name="pvstart1")
+  b.attach_kretprobe(event="sys_pwritev2", fn_name="pvend")
 myFiles = []
 indexes = []
 print("Tracing in progress... Ctrl-C to end")
@@ -171,11 +247,13 @@ DNAME_INLINE_LEN = 32;
 
 class Data(ct.Structure):
     _fields_ = [("filename", ct.c_char * DNAME_INLINE_LEN), 
+		("fileDisc", ct.c_ulonglong),
                 ("offset", ct.c_ulonglong), 
                 ("bytes", ct.c_ulonglong),
                 ("timestamp", ct.c_ulonglong),
                 ("latency", ct.c_ulonglong),
                 ("type", ct.c_ulonglong) ]
+
 
 def print_event(cpu, data, size):
   event = ct.cast(data, ct.POINTER(Data)).contents
@@ -189,8 +267,20 @@ def print_event(cpu, data, size):
   myFiles[Index].write("%d   %5d  %5.2f  %5d  %5.2f\n"%(event.offset, event.bytes, float(event.latency), event.type, event.timestamp))
 
 
-b["events"].open_perf_buffer(print_event, page_cnt=8192)
+def print_eventpv(cpu, data, size):
+  event = ct.cast(data, ct.POINTER(Data)).contents
+  if event.fileDisc not in indexes:
+     myFiles.append(open('%s'%event.fileDisc,'a'))
+     indexes.append(event.fileDisc)
+     TempIndex = indexes.index(event.fileDisc)
+     myFiles[TempIndex].write("offset readByteSize  latency_ms  type  timestamp   \n")
+ 
+  Index = indexes.index(event.fileDisc)
+  myFiles[Index].write("%d   %5d  %5.2f  %5d  %5.2f\n"%(event.offset, event.bytes, float(event.latency), event.type, event.timestamp))
 
+
+b["events"].open_perf_buffer(print_event, page_cnt=8192)
+b["eventspv"].open_perf_buffer(print_eventpv, page_cnt=8192)
 while 1: 
   try: 
     b.kprobe_poll()
