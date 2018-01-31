@@ -1,6 +1,7 @@
 #!/bin/bash
 
-# on debian, install fio, tested with fio-2.1.3
+# tested with fio-2.1.3
+# on ubuntu or debian, install fio as follows 
 apt-get install -y fio
 
 # variable to take the workloads types (IOengines
