@@ -1,5 +1,5 @@
 # IOscope
-This projects provides the different tools of IOscope as well as the necessary informations for reproducing the experimental study listed in the IOscope paper 
+This project provides the different tools of IOscope as well as the necessary informations for reproducing the experimental study listed in the IOscope paper 
 
 
 
