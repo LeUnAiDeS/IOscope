@@ -13,6 +13,7 @@ import argparse
 import signal
 import re
 import ctypes as ct
+import commands
 
 # signal handler
 def signal_ignore(signal, frame):
@@ -21,6 +22,7 @@ def signal_ignore(signal, frame):
 examples = """examples:
     ./IOscope_mmap           # trace every event that passes through our target function
     ./IOscope_mmap -i 181    # trace a given file by providing its inode number 
+    ./IOscope_mmap -p /tmp/data/  -e "fdt"    # trace all the files with a given extention, located in all subfolders of the given path
 """
 
 parser = argparse.ArgumentParser(
@@ -30,13 +32,13 @@ the results also report the latency of each requests",
     epilog=examples)
 parser.add_argument("-i", "--inode",
     help="trace this inode demand paging only")
+parser.add_argument("-p", "--path",
+    help="give a path where the target files are located")
+parser.add_argument("-e", "--extention",
+    help="indicates which extention of files that you want to trace")
+
 args = parser.parse_args() 
 
-
-
-if not args.inode:
-   print("You should indicate the inode of the target file to be traced, otherwise there are a lot of output files")
-   exit(0)
 
 # load BPF program
 mytext = """
@@ -119,8 +121,21 @@ int check_end(struct pt_regs *ctx) {
 if args.inode:
     mytext = mytext.replace('FILTER',
         'if (inode != %s) { return 0; }' % args.inode)
+elif args.path:
+  if args.extention: 
+     command = "find %s -type f -name '*.%s' | xargs -n 2 ls -i  | cut -d ' ' -f 1"%(args.path,args.extention)
+     s,v = commands.getstatusoutput(command)
+     inodes=v.splitlines()  # list of inodes of the given extention  
+     # make a conditional statement to replace filter
+     replacement = "if ("
+     for i in inodes:
+         replacement+=("inode != "+ i + " ||")
+     replacement += "false) { return 0; }"
+     mytext = mytext.replace('FILTER', replacement)
+     print(mytext)
 else:
     mytext= mytext.replace('FILTER', '')
+
 
 b = BPF(text=mytext)
 b.attach_kprobe(event="filemap_fault", fn_name="check_starting")
