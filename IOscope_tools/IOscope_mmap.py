@@ -131,7 +131,7 @@ elif args.path:
      for i in inodes:
          replacement+=("inode != "+ i + " ||")
      replacement = replacement[:-3]	
-     replacement += "false) { return 0; }"
+     replacement += ") { return 0; }"
      mytext = mytext.replace('FILTER', replacement)
      print(mytext)
 else:
