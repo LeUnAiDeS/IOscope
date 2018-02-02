@@ -129,7 +129,7 @@ elif args.path:
      # make a conditional statement to replace filter
      replacement = "if ("
      for i in inodes:
-         replacement+=("inode != "+ i + " ||")
+         replacement+=("inode != "+ i + " &&")
      replacement = replacement[:-3]	
      replacement += ") { return 0; }"
      mytext = mytext.replace('FILTER', replacement)
