@@ -44,12 +44,12 @@ reproduce the experiments using my data, send my an e-mail and I will send you b
 However, I uploaded a data file of a MongoDB shard used to produce Figure 10 in IOscope paper.
 THere is a link: https://drive.google.com/file/d/0Bzu8JSTIH-U0OFFsNE84U1ktcXM/view?usp=sharing
 
-To reproduce the experiment: \\
-1- Stop mongod daemon.  \\
-2- extract the data to a folder and then make this folder as the data folder of MongoDB \\
-3- start the mongod daemon again \\ 
-4- connect to the daemon using mongo command in the command line. \\
-5- try to start the indexing process \\
+To reproduce the experiment:  <br />
+1- Stop mongod daemon.   <br />
+2- extract the data to a folder and then make this folder as the data folder of MongoDB  <br />
+3- start the mongod daemon again  <br />
+4- connect to the daemon using mongo command in the command line.  <br />
+5- try to start the indexing process  <br />
 
 ```
 $ kill $(pidof mongod)
