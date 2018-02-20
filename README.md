@@ -2,7 +2,6 @@
 This project provides the different tools of IOscope as well as the necessary informations for reproducing the experimental study listed in the IOscope paper 
 
 
-
 ## Validating IOscope
 To test IOscope against all the supported workloads, you should do the following steps. 
 Clone the IOscope project and get inside it: 
@@ -35,6 +34,39 @@ Ioscope/IOscope_validation/datasets/$ for i in *.csv; do Rscript ../script.R $i;
 This will produce a pdf file containing a correspondent figure for each provided workload.
 Chenck now the *datasets* folder to visualize the drawn data.
 
+
+## Datasets and a reproducible example 
+
+Datasets folder contains two scripts for generating Cassandra & MongoDB datasets. 
+
+I didn't push all the  data files as they are very large, but if you want to 
+reproduce the experiments using my data, send my an e-mail and I will send you back the data files. 
+However, I uploaded a data file of a MongoDB shard used to produce Figure 10 in IOscope paper.
+This is the the data link: https://drive.google.com/file/d/0Bzu8JSTIH-U0OFFsNE84U1ktcXM/view?usp=sharing
+
+To reproduce the experiment: 
+1- Stop mongod daemon. 
+2- extract the data to a folder and then make this folder as the data folder of MongoDB 
+3- start the mongod daemon again (mongod --config  /etc/mongodb.conf --port 27017 &)
+4- connect to the daemon using mongo command in the command line. 
+5- try to start the indexing process 
+
+```
+$ mongo
+mongo> use xilopix
+mongo> db.dump.createIndexes({randNum:1})
+```
+In another shell, clone IOscope ad starts the IOscope\_classic tool as follwows: 
+
+```
+$ git clone https://github.com/LeUnAiDeS/IOscope.git
+$ python Ioscope/IOscope_tools/IOscope_classic -p $(pidof mongod) -w 2 & 
+```
+
+When the worload is terminated, exist the tracing process, and look at the generated files. Among them you will a file named with with collectin as a prefix. Open it to see the order of the offsets inside or make a sample draw of the sequences of offsets against the offsets themselves. 
+
+Then, apply our solution as described in the paper. Make a dump using mongodump (with xilopix as a db , and dump as a collection name. Then, restore the data to MongoDB folder and re-index the same field again with launching our IOscope\_classic 
+to get the differences in terms of indexation time and the I/O access patterns.
 
 ## Understanding the I/O flow inside the Linux Kernel
 We modified the NOOP I/O scheduler inside the Linux kernel to expose the information about the number of the 
