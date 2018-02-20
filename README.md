@@ -47,11 +47,12 @@ This is the the data link: https://drive.google.com/file/d/0Bzu8JSTIH-U0OFFsNE84
 To reproduce the experiment: 
 1- Stop mongod daemon. 
 2- extract the data to a folder and then make this folder as the data folder of MongoDB 
-3- start the mongod daemon again (mongod --config  /etc/mongodb.conf --port 27017 &)
+3- start the mongod daemon again
 4- connect to the daemon using mongo command in the command line. 
 5- try to start the indexing process 
 
 ```
+$ mongod --config  /etc/mongodb.conf --port 27017 &
 $ mongo
 mongo> use xilopix
 mongo> db.dump.createIndexes({randNum:1})
