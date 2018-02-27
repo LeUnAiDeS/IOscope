@@ -30,11 +30,11 @@ if ("type" %in% colnames(dataFrame))
 #without color 
 #plot(dataFrame$i, dataFrame$offset, xlab="Sequences of I/O requests",ylab="File offsets", pch = ifelse(dataFrame$type==0,3,4), cex.lab=1.8, cex.axis=1.8)
 #legend('topleft', legend= c("Read IO req.", "Write IO req."), pch = c(3,4), cex=1.5)
-plot(dataFrame$i, dataFrame$offset, xlab="Sequences of I/O requests",ylab="File offsets",  pch = 20, col = ifelse(dataFrame$type==0,'gray','red'), cex.lab=1.8, cex.axis=1.8)
+plot(dataFrame$i, dataFrame$offset, xlab="Sequences of I/O requests",ylab="File offsets (byte)",  pch = 20, col = ifelse(dataFrame$type==0,'gray','red'), cex.lab=1.8, cex.axis=1.8)
 #legend('topleft', legend= c("Read IO req.", "Write IO req."), col=c("gray", "red"),pch = c(20,20), cex=1.5)
 add_legend('top', legend= c("Read IO req.", "Write IO req."), col=c("gray", "red"),pch = c(20,20), cex=1.5, horiz=TRUE, bty='n')
 } else {
-plot(dataFrame$i, dataFrame$offset, xlab="Sequences of memory faults",ylab="File offsets",  pch = 20, col ="black", cex.lab=1.8, cex.axis=1.8)
+plot(dataFrame$i, dataFrame$offset, xlab="Sequences of memory faults",ylab="File offsets (byte)",  pch = 20, col ="black", cex.lab=1.8, cex.axis=1.8)
 legend('topleft', legend= c("mmap mem. faults"), col=c("black"),pch =19, cex=1.8)
 }
 invisible(dev.off())
