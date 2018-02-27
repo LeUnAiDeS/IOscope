@@ -1,0 +1,48 @@
+Installing the kernel, BCC, and creating a MongoDB cluster On Grid5000 testbed
+==============================================================================
+
+============
+Description
+============
+
+- This script is for creating a MongoDB cluster on Grid5000 testbed. The number of
+[configuration, routing and sharding] servers can be passed as parameters 
+(it is preferable to have three configuration servers in production).
+
+- This script automates the communication between all the server units, 
+then a sharded database is created to be held on all the sharding servers. Its sharded key is a "hashed id".
+
+
+db : xilopix
+collection : dump
+
+
+After executing this script without errors, you can verify that the the data  on a shard server 
+is distributed among all the sharding machines, you con do the verification starting from any mongo router.
+
+example: 
+- On a sharding machine prompt: 
+> mongo --host (any mongo outer) --port 27017
+ > use xilopix 
+ > db.dump.find() # to show the entered values.
+
+
+
+==========
+Execution
+==========
+
+You should run the following command after uploding the script on any Grid5000's frontal : 
+
+> ruby Launcher 3 2 4      # with 3 conf. servers, 2 routing servers   and 4 sharding servers.
+
+
+
+** The script reserve all nodes on lyon site, we can make it automatic by modifing the Reservation.rb
+
+
+***************************************
+***************************************
+Installing Cassandra. 
+
+You can als install Cassandra using the script install_cassandra.sh 

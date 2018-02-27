@@ -1,0 +1,18 @@
+First Xp sharding details
+=========================
+
+ data : 66.49GiB docs : 20000000 chunks : 2143
+ Shard shard0000 contains 48.19% data, 48.19% docs in cluster, avg obj size on shard : 3KiB  ==> firstShard  => 3000 sec
+ Shard shard0001 contains 51.8% data, 51.8% docs in cluster, avg obj size on shard : 3KiB   ==>  secondShard => 1450 sec
+
+
+
+
+Second Xp sharding details
+=========================
+
+data : 66.49GiB docs : 20000000 chunks : 1879
+ Shard shard0000 contains 50.27% data, 50.27% docs in cluster, avg obj size on shard : 3KiB ==> firstShard  =>  1171 sec
+ Shard shard0001 contains 49.72% data, 49.72% docs in cluster, avg obj size on shard : 3KiB ==> secondShard =>  808 sec
+
+
