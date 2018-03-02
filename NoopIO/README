@@ -5,7 +5,7 @@ maintains a regular flow of requests at runtime. To reach this objective, we mod
 waiting I/O requests in order to determine the real-time flow of the I/O worklaods of the analyzed system.
 
 
-*NoopIO* folder contains the modified files of the NOOP I/O scheduler, and our eBPF tool that consumes the exposed information.
+This folder contains the modified files of the NOOP I/O scheduler, and our eBPF tool that consumes the exposed information.
 To understand the rate of the I/O requests of any given system, you should replace the Noop I/O scheduler files in your kernel 
 by those ones: 
 ```
