@@ -70,21 +70,3 @@ When the worload is terminated, exist the tracing process, and look at the gener
 
 Then, apply our solution as described in the paper. Make a dump using mongodump (with xilopix as a db , and dump as a collection name. Then, restore the data to MongoDB folder and re-index the same field again with launching our IOscope\_classic 
 to get the differences in terms of indexation time and the I/O access patterns.
-
-## Understanding the I/O flow inside the Linux Kernel
-We modified the NOOP I/O scheduler inside the Linux kernel to expose the information about the number of the 
-waiting I/O requests in order to determine the real-time flow of the I/O worklaods of the analyzed system.
-
-
-*NoopIO* folder contains the modified files of the NOOP I/O scheduler, and our eBPF tool that consumes the exposed information.
-To understand the rate of the I/O requests of any given system, you should replace the Noop I/O scheduler files in your kernel 
-by those ones: 
-```
-   elevator.h      => can be found in this path: ~kernelSource/include/linux/
-   noop-iosched.c  => can be found in this path: ~kernelSource/block/
-``` 
-Then you can start the dedicated tool to analyze the I/O flow as follows: 
-```
- IOscope$ python NoopIO/NoopSchedTool.py  > saveData
- ```
- You should stop the exeuction of NoopSchedTool at the end of the SUT workload. This will produce a file containing I/O flow of the requests that were waiting in the scheduler during the exeuction. 
