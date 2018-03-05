@@ -70,3 +70,14 @@ When the worload is terminated, exist the tracing process, and look at the gener
 
 Then, apply our solution as described in the paper. Make a dump using mongodump (with xilopix as a db , and dump as a collection name. Then, restore the data to MongoDB folder and re-index the same field again with launching our IOscope\_classic 
 to get the differences in terms of indexation time and the I/O access patterns.
+
+
+
+## Reproducing I/O patterns figures of IOscope paper
+
+The obtained data for of the I/O patterns figures of the IOscope paper can be found here: [usecase\_experiments](usecase\_experiments/Results/). <br /> You can draw them using the provided R script insdie the usecase\_experiments folder. For example: 
+
+```
+IOscope/usecase_experiments/StandaloneMongoDB$ Rscript ../drawingPatterns.R HDD_result.csv   
+IOscope/usecase_experiments/StandaloneMongoDB$ evince outOfTheExecutedExample.pdf   // to visualize the produced I/O patterns
+```
