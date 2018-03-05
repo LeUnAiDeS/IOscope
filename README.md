@@ -79,5 +79,5 @@ The obtained data for of the I/O patterns figures of the IOscope paper can be fo
 
 ```
 IOscope/usecase_experiments/StandaloneMongoDB$ Rscript ../drawingPatterns.R HDD_result.csv   
-IOscope/usecase_experiments/StandaloneMongoDB$ evince outOfTheExecutedExample.pdf   // to visualize the produced I/O patterns
+IOscope/usecase_experiments/StandaloneMongoDB$ evince outOfTheExecutedExample.pdf   // to visualize 
 ```
