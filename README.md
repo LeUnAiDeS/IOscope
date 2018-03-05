@@ -75,7 +75,7 @@ to get the differences in terms of indexation time and the I/O access patterns.
 
 ## Reproducing I/O patterns figures of IOscope paper
 
-The obtained data for of the I/O patterns figures of the IOscope paper can be found here: [usecase\_experiments](usecase\_experiments/Results/). <br /> You can draw them using the provided R script insdie the usecase\_experiments folder. For example: 
+The obtained data for of the I/O patterns figures of the IOscope paper can be found here: [usecase\_experiments/Results](usecase\_experiments/Results/). <br /> You can draw them using the provided R script insdie the usecase\_experiments folder. For example: 
 
 ```
 IOscope/usecase_experiments/StandaloneMongoDB$ Rscript ../drawingPatterns.R HDD_result.csv   
