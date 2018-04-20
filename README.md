@@ -41,7 +41,7 @@ Datasets folder contains two scripts for generating Cassandra & MongoDB datasets
 
 I didn't push all the  data files as they are very large, but if you want to 
 reproduce the experiments using my data, send my an e-mail and I will send you back the data files. 
-However, I uploaded a data file of a MongoDB shard used to produce Figure 10 in IOscope paper.
+However, I uploaded a data file of a MongoDB shard used to produce Figure 6 in IOscope paper.
 THere is a link: https://drive.google.com/file/d/0Bzu8JSTIH-U0OFFsNE84U1ktcXM/view?usp=sharing
 
 To reproduce the experiment:  <br />
